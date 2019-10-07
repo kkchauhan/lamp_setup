@@ -62,8 +62,22 @@ mysql -u $dbuser -p$dbpass -Bse "SET GLOBAL innodb_large_prefix = 1;SET GLOBAL i
 #show database back to user
 echo "------Successfully created database------"
 mysql -u $dbuser -p$dbpass -Bse "SHOW DATABASES;" | grep $dbname
+#install phpmyadmin
+echo "------Installing phpmyadmin------"
+sudo apt install php-mbstring php-gettext
+## Install PhpMyAdmin
+sudo apt-get install phpmyadmin -y
+## Configure PhpMyAdmin
+echo 'Include /etc/phpmyadmin/apache.conf' >> /etc/apache2/apache2.conf
+# Enabling Mod Rewrite
+sudo a2enmod rewrite
+sudo phpenmod mbstring
 echo "------Downloading Wordpress-------"
 sudo wget -P /var/www wget https://wordpress.org/latest.tar.gz
 sudo tar -xzvf latest.tar.gz
 sudo rm -Rf /var/www/html
 sudo mv /var/www/wordpress /var/www/html
+# Set Permissions
+sudo chown -R www-data:www-data /var/www/html
+# Restart Apache
+sudo service apache2 restart
